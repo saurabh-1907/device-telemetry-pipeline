@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "device-telemetry-pipeline"
+version = "0.1.0"
+description = "DuckDB-backed device telemetry normalization, rollups, and build regression analysis"
+requires-python = ">=3.10"
+dependencies = ["duckdb>=1.0,<2", "numpy>=1.24,<3", "scipy>=1.10,<2"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+telemetry = "telemetry_pipeline.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
