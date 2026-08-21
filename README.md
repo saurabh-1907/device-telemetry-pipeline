@@ -2,7 +2,15 @@
 
 A working Python pipeline for device performance and battery telemetry. It ingests normalized CSV records into DuckDB, exposes SQL-backed rollups by device model, OS build and time window, and compares baseline/candidate build distributions using standardized mean difference (Cohen's d) plus a Mann–Whitney U p-value.
 
-## Data contract
+## Domain model: dual-message authorization and clearing
+
+Modelled on the publicly documented ISO 8583 dual-message authorization/clearing flow used by card networks. Not affiliated with, endorsed by, or connected to Mastercard. No Mastercard code, data, or branding is used.
+
+The implementation separates an authorization hold from later clearing/capture. `messages.py` provides a deliberately limited ISO-8583-style MTI plus field-map serializer/parser: `0100` authorization request, `0110` authorization response, and `0220` clearing. `reconcile.py` provides a reconciliation view that matches authorization and clearing records by transaction ID and reports matched, amount mismatch, missing clearing, and orphan clearing records.
+
+This is an educational/domain model, not a private card-network protocol implementation.
+
+## Telemetry data contract
 
 Input CSV columns: `timestamp, device_id, device_model, os_build, metric, value, unit`.
 
@@ -30,3 +38,7 @@ The fixture generator creates deterministic synthetic data solely for tests and 
 ## Error handling
 
 CLI commands return exit code 2 for expected input/configuration failures and print a concise error to stderr. Library functions raise typed `TelemetryError` subclasses for invalid telemetry input.
+
+## Scope and branding
+
+No logos, brand assets, or proprietary network implementation are included. The message model uses generic card-network terminology and publicly documented ISO 8583 concepts only.
